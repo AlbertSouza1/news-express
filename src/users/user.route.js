@@ -1,10 +1,11 @@
 import express from 'express';
-import { getUser, createUser, updateUser } from '../users/user.controller.js';
+import { findAll, findById, createUser, updateUser } from '../users/user.controller.js';
 
 const userRoute = express.Router();
 
-userRoute.get('/', getUser);
+userRoute.get('/', findAll);
+userRoute.get('/:id', findById);
 userRoute.post('/', createUser);
-userRoute.put('/', updateUser);
+userRoute.put('/:id', updateUser);
 
 export default userRoute;
