@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 export const connectDatabase = () => {
     console.log("Connecting to the database.");
 
