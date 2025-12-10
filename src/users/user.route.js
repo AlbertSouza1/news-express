@@ -6,6 +6,6 @@ const userRoute = express.Router();
 userRoute.get('/', findAll);
 userRoute.get('/:id', findById);
 userRoute.post('/', createUser);
-userRoute.put('/:id', updateUser);
+userRoute.patch('/:id', updateUser);
 
 export default userRoute;

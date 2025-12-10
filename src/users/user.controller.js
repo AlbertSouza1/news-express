@@ -1,7 +1,7 @@
 import * as userService from './user.service.js';
 import { ApiResult } from '../utils/api.result.js';
 import mongoose from 'mongoose';
-import { validateUserFields } from './user-validator.js';
+import { validateAllFields, validateAtLeastOneFieldPassed } from './user-validator.js';
 
 export async function findAll(req, res) {
     try {
@@ -42,7 +42,7 @@ export async function createUser(req, res) {
 
     try {
 
-        if (!validateUserFields(body))
+        if (!validateAllFields(body))
             return res.status(400).send(ApiResult.error('Submit all fields for registration.'));
 
         const user = await userService.create(body);
@@ -75,8 +75,8 @@ export async function updateUser(req, res) {
         if (!mongoose.Types.ObjectId.isValid(id))
             return res.status(400).send(ApiResult.error("Invalid id."))
 
-        if (!validateUserFields(body))
-            return res.status(400).send(ApiResult.error('Submit all fields for update.'));
+        if (!validateAtLeastOneFieldPassed(body))
+            return res.status(400).send(ApiResult.error('Submit at least one field for update.'));
 
         const user = await userService.update(id, body);
 
