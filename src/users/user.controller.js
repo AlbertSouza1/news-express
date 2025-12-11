@@ -5,10 +5,12 @@ import { UserResult } from './user.result.js';
 export async function findAll(req, res) {
     try {
         const users = await userService.findAll();
+
         if (users.length === 0)
             return res.status(404).send(ApiResult.error("No users found."));
+        
+        return res.status(200).send(ApiResult.success("", users.map(user => UserResult.fromUserModel(user))));
 
-        return res.status(200).send(ApiResult.success("", users));
     } catch (error) {
         console.log(error);
         res.status(500).send(ApiResult.error("Internal error."));
@@ -17,18 +19,7 @@ export async function findAll(req, res) {
 
 export async function findById(req, res) {
     try {
-        return res.status(200).send(ApiResult.success(
-            "",
-            new UserResult(
-                req.id,
-                req.user.name,
-                req.user.username,
-                req.user.email,
-                req.user.avatar,
-                req.user.background
-            )
-        ));
-
+        return res.status(200).send(ApiResult.success("", UserResult.fromUserModel(req.user)));
     } catch (error) {
         console.log(error);
         res.status(500).send(ApiResult.error("Internal error."));
@@ -46,14 +37,7 @@ export async function createUser(req, res) {
 
         res.status(201).send(ApiResult.success(
             "User created successfully",
-            new UserResult(
-                user._id,
-                user.name,
-                user.username,
-                user.email,
-                user.avatar,
-                user.background
-            )
+            UserResult.fromUserModel(user)
         ));
     } catch (error) {
         res.status(500).send(ApiResult.error("Internal error."));
@@ -70,14 +54,7 @@ export async function updateUser(req, res) {
 
         return res.status(200).send(ApiResult.success(
             "User updated successfully.",
-            new UserResult(
-                user._id,
-                user.name,
-                user.username,
-                user.email,
-                user.avatar,
-                user.background
-            )
+            UserResult.fromUserModel(user)
         ));
 
     } catch (error) {

@@ -7,4 +7,15 @@ export class UserResult {
         this.avatar = avatar;
         this.background = background;
     }
+
+    static fromUserModel(user) {
+        return new UserResult(
+            user._id,
+            user.name,
+            user.username,
+            user.email,
+            user.avatar,
+            user.background
+        );
+    }
 }
