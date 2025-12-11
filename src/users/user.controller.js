@@ -40,12 +40,9 @@ export async function createUser(req, res) {
     const body = req.body;
 
     try {
-
         const user = await userService.create(body);
 
-        if (!user) {
-            return res.status(400).send(ApiResult.error("Error creating user."));
-        }
+        if (!user) return res.status(400).send(ApiResult.error("Error creating user."));
 
         res.status(201).send(ApiResult.success(
             "User created successfully",
@@ -70,7 +67,7 @@ export async function updateUser(req, res) {
 
         if (!user)
             return res.status(400).send(ApiResult.error("No user updated."));
-        
+
         return res.status(200).send(ApiResult.success(
             "User updated successfully.",
             new UserResult(
