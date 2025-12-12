@@ -1,12 +1,21 @@
-import express from 'express';
-import { findAll, findById, createUser, updateUser } from '../users/user.controller.js';
-import { validateUserExists, validateAllFields, validateAtLeastOneFieldPassed } from './user.middleware.js';
+import { Router } from 'express';
+import * as userController from '../users/user.controller.js';
+import * as userMiddleware from './user.middleware.js';
 
-const userRoute = express.Router();
+const userRoute = Router();
 
-userRoute.get('/', findAll);
-userRoute.get('/:id', validateUserExists, findById);
-userRoute.post('/', validateAllFields, createUser);
-userRoute.patch('/:id', validateUserExists, validateAtLeastOneFieldPassed, updateUser);
+userRoute.get('/', userController.findAll);
+userRoute.get('/:id', userMiddleware.validateUserExists, userController.findById);
+userRoute.post(
+    '/',
+    userMiddleware.validateCreateFields,
+    userController.createUser
+);
+userRoute.patch(
+    '/:id',
+    userMiddleware.validateUserExists,
+    userMiddleware.validateUpdateFields,
+    userController.updateUser
+);
 
 export default userRoute;

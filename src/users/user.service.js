@@ -1,5 +1,4 @@
 import { User } from "./User.js";
-import bycrypt from 'bcrypt';
 
 export const findAll = async () => await User.find();
 export const findById = async (id) => await User.findById(id);

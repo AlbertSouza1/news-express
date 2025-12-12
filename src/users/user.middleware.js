@@ -2,7 +2,7 @@ import { ApiResult } from '../utils/api.result.js';
 import mongoose from "mongoose";
 import * as userService from '../users/user.service.js';
 
-export const validateAllFields = (req, res, next) => {
+export const validateCreateFields = (req, res, next) => {
     const { name, username, email, password, avatar, background } = req.body;
 
     if (!name || !username || !email || !password || !avatar || !background)
@@ -11,7 +11,7 @@ export const validateAllFields = (req, res, next) => {
     next();
 }
 
-export const validateAtLeastOneFieldPassed = (req, res, next) => {
+export const validateUpdateFields = (req, res, next) => {
     const { name, username, email, password, avatar, background } = req.body;
 
     if (!name && !username && !email && !password && !avatar && !background)

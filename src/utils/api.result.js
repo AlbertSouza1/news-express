@@ -1,15 +1,15 @@
 export class ApiResult {
 
-    constructor(message = String, data = any) {
+    constructor(message, data = null) {
         this.message = message;
         this.data = data;
     }
 
-    static success(message = String, data = any) {
+    static success(message, data = null) {
         return new ApiResult(message, data);
     }
 
-    static error(message = String) {
+    static error(message) {
         return new ApiResult(message, null);
     }
 }
