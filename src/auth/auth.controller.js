@@ -5,11 +5,11 @@ export async function login(req, res) {
 
     try {
         const { email, password } = req.body;
-        const token = await authService.login(email, password);
+        const login = await authService.login(email, password);
 
-        if (!token) return res.status(401).send(ApiResult.error("Email or password invalid."))
-
-        return res.status(200).send(ApiResult.success('', token));
+        if (!login) return res.status(401).send(ApiResult.error("Email or password invalid."))
+        
+        return res.status(200).send(ApiResult.success('', login));
 
     } catch (error) {
         console.log(error);

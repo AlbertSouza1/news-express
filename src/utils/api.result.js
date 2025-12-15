@@ -11,5 +11,7 @@ export class ApiResult {
 
     static error(message) {
         return new ApiResult(message, null);
-    }
+    }   
 }
+
+export const defaultInternalError = (res) => res.status(500).send(ApiResult.error("Internal server error."));

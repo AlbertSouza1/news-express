@@ -1,6 +1,8 @@
 import express from 'express';
 import userRoute from './src/users/user.route.js';
 import authRoute from './src/auth/auth.route.js';
+import newsRoute from './src/news/news.route.js';
+
 import 'dotenv/config';
 import { connectDatabase } from './src/database/db.js';
 
@@ -13,5 +15,6 @@ app.use(express.json());
 
 app.use("/users", userRoute);
 app.use("/auth", authRoute);
+app.use("/news", newsRoute);
 
 app.listen(port);
