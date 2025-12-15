@@ -6,3 +6,14 @@ export function validateLoginFields(req, res, next) {
 
     next();
 }
+
+export function verifyAuthenticationToken(req, res, next){
+    const tokenHeader = req.headers.authorization;
+    if(!tokenHeader) return res.status(401).send(ApiResult.error("No authentication token was provided."));
+
+    const token = tokenHeader.split(' ')[1];
+
+    req.userAuthenticated = true;
+
+    next();
+}
