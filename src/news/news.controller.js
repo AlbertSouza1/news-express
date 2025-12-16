@@ -13,7 +13,10 @@ export async function findAll(req, res) {
 
 export async function create(req, res) {
     try {
-        const news = await newsService.create(req.body);
+        const news = await newsService.create({
+            ...req.body,
+            user: req.userId
+        });
 
         if (!news)
             return res.status(400).send("Error creating news.");
@@ -21,6 +24,7 @@ export async function create(req, res) {
         return res.status(200).send(ApiResult.success('', NewsResult.fromNewsModel(news)));
 
     } catch (error) {
+        console.log(error);
         return defaultInternalError(res);
     }
 }
