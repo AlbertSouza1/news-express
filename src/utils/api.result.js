@@ -1,12 +1,13 @@
 export class ApiResult {
 
-    constructor(message, data = null) {
+    constructor(message, data = null, pagination = null) {
         this.message = message;
+        this.pagination = pagination;
         this.data = data;
     }
 
-    static success(message, data = null) {
-        return new ApiResult(message, data);
+    static success(message, data = null, pagination = null) {
+        return new ApiResult(message, data, pagination);
     }
 
     static error(message) {
