@@ -5,7 +5,8 @@ export class NewsResult {
         this.text = text;
         this.banner = banner;
         this.createdAt = createdAt;
-        this.user = user;
+        this.userName = user.name;
+        this.userAvatar = user.avatar;
         this.likes = likes;
         this.comments = comments;
     }

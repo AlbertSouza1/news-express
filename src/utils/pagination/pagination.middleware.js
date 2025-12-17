@@ -22,7 +22,6 @@ const validateLimitAndPage = (query, options = {}) => {
 
     const defaultPage = 1;
     let { limit = defaultLimit, page = defaultPage } = query;
-    console.log(query);
 
     limit = Number(limit);
     page = Number(page);

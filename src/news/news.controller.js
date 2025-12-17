@@ -7,8 +7,10 @@ export async function findAll(req, res) {
         const { limit, page } = req.pagination;
         const news = await newsService.findAll(limit, page);
 
-        return res.status(200).send(ApiResult.success('', news));
-        
+        return res.status(200).send(
+            ApiResult.success('', news.map(x => NewsResult.fromNewsModel(x)))
+        );
+
     } catch (error) {
         console.log(error);
         return defaultInternalError(res);
