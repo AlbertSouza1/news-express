@@ -4,9 +4,13 @@ import * as newsService from './news.service.js';
 
 export async function findAll(req, res) {
     try {
-        const news = await newsService.findAll();
+        const { limit, page } = req.pagination;
+        const news = await newsService.findAll(limit, page);
+
         return res.status(200).send(ApiResult.success('', news));
+        
     } catch (error) {
+        console.log(error);
         return defaultInternalError(res);
     }
 }

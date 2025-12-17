@@ -4,11 +4,12 @@ import { UserResult } from './user.result.js';
 
 export async function findAll(req, res) {
     try {
-        const users = await userService.findAll();
+        const { limit, page } = req.pagination;
+        const users = await userService.findAll(limit, page);
 
         if (users.length === 0)
             return res.status(404).send(ApiResult.error("No users found."));
-        
+
         return res.status(200).send(ApiResult.success("", users.map(user => UserResult.fromUserModel(user))));
 
     } catch (error) {
