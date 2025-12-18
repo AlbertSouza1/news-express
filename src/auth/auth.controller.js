@@ -9,7 +9,7 @@ export async function login(req, res) {
 
         if (!login) return res.status(401).send(ApiResult.error("Email or password invalid."))
         
-        return res.status(200).send(ApiResult.success('', login));
+        return res.status(200).send(ApiResult.success(login));
 
     } catch (error) {
         console.log(error);

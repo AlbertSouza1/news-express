@@ -2,12 +2,16 @@ import { News } from './News.js';
 import { getSkipValue } from '../utils/db-skip-calculator.js';
 
 export const findAll = async (limit = 5, page = 1) => {   
-    return await News.find()
+    const data = await News.find()
         .sort({ _id: -1 })
         .skip(getSkipValue(limit, page))
-        .limit(limit)
+        .limit(limit + 1)
         .populate("user")
         .lean();
+
+    const hasNext = data.length > limit;
+    const news = data.slice(0, limit);
+    return { news, hasNext};
 };
 
 export const create = async (body) => await News.create(body);
