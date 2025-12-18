@@ -37,3 +37,15 @@ export async function create(req, res) {
         return defaultInternalError(res);
     }
 }
+
+export async function topNews(req, res) {
+    try {
+        const topNews = await newsService.latestNews();
+        if(!topNews) return res.status(404).send(ApiResult.error("No news found."));
+
+        return res.status(200).send(ApiResult.success(NewsResult.fromNewsModel(topNews)));
+    } catch (error) {
+        console.log(error);
+        return defaultInternalError(res);
+    }
+}
