@@ -15,3 +15,12 @@ export const validateIdParameter = (req, res, next) => {
         return res.status(400).send(ApiResult.error("Invalid id."));
     return next();
 }
+
+export const validateUpdateFields = (req, res, next) => {
+    const { title, text, banner } = req.body;
+    
+    if(!title && !text && !banner)
+        return res.status(400).send(ApiResult.error("Submit at least one field to update."));
+
+    next();
+}

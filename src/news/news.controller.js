@@ -97,3 +97,21 @@ export async function findUserNews(req, res) {
         return defaultInternalError(res);
     }
 }
+
+export async function updateNews(req, res) {
+    try {
+        const { userId, body } = req;
+        const id = req.params.id;
+
+        const result = await newsService.update(id, userId, body);
+
+        if (!result.success)
+            return res.status(400).send(ApiResult.error(result.message));
+
+        return res.status(200).send(ApiResult.success());
+
+    } catch (error) {
+        console.log(error);
+        return defaultInternalError(res);
+    }
+}
