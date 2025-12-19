@@ -16,3 +16,4 @@ export const findAll = async (limit = 5, page = 1) => {
 
 export const create = async (body) => await News.create(body);
 export const latestNews = async () => await News.findOne().sort({ _id: -1 }).populate("user");
+export const findById = async (id) => await News.findById(id);

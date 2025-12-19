@@ -1,4 +1,5 @@
 import { ApiResult } from "../utils/api.result.js";
+import mongoose from "mongoose";
 
 export const validateCreationFields = (req, res, next) => {
     const { title, text, banner } = req.body;
@@ -8,3 +9,9 @@ export const validateCreationFields = (req, res, next) => {
 
     next();
 };
+
+export const validateIdParameter = (req, res, next) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id))
+        return res.status(400).send(ApiResult.error("Invalid id."));
+    return next();
+}
