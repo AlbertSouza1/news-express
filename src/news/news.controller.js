@@ -58,7 +58,7 @@ export async function findById(req, res) {
         if (!news)
             return res.status(400).send(ApiResult.error("No news found for the provided id."));
 
-        return res.status(200).send(ApiResult.success(news));
+        return res.status(200).send(ApiResult.success(NewsResult.fromNewsModel(news)));
 
     } catch (error) {
         console.log(error);
@@ -71,8 +71,24 @@ export async function findByTitle(req, res) {
         const { title } = req.query;
         const news = await newsService.findByTitle(title);
 
-        if(!news || news.length === 0)
+        if (!news || news.length === 0)
             return res.status(400).send(ApiResult.error("No news found for the provided search text."))
+
+        return res.status(200).send(ApiResult.success(news.map(x => NewsResult.fromNewsModel(x))));
+
+    } catch (error) {
+        console.log(error);
+        return defaultInternalError(res);
+    }
+}
+
+export async function findUserNews(req, res) {
+    try {
+        const userId = req.params.id;
+        const news = await newsService.findUserNews(userId);
+
+        if (!news || news.length === 0)
+            return res.status(400).send(ApiResult.error("No news found for this user."));
 
         return res.status(200).send(ApiResult.success(news.map(x => NewsResult.fromNewsModel(x))));
 

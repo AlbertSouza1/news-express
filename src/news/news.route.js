@@ -10,6 +10,7 @@ route.post('/', verifyAuthentication, newsMiddleware.validateCreationFields, new
 route.get('/', validatePagination({ defaultLimit: 5, maxLimit: 50 }), newsController.findAll);
 route.get('/top', newsController.topNews);
 route.get('/search', verifyAuthentication, newsController.findByTitle);
+route.get('/user/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.findUserNews);
 route.get('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.findById);
 
 export default route;
