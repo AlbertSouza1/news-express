@@ -115,3 +115,21 @@ export async function updateNews(req, res) {
         return defaultInternalError(res);
     }
 }
+
+export async function deleteNews(req, res) {
+    try {
+        const userId = req.userId;
+        const id = req.params.id;
+
+        const result = await newsService.deleteNews(id, userId);
+
+        if(!result.success)
+            return res.status(400).send(ApiResult.error(result.message));
+
+        return res.status(200).send(ApiResult.success());
+
+    } catch (error) {
+        console.log(error);
+        return defaultInternalError(res);
+    }
+}

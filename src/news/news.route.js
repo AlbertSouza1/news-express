@@ -13,5 +13,6 @@ route.get('/search', verifyAuthentication, newsController.findByTitle);
 route.get('/user/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.findUserNews);
 route.get('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.findById);
 route.patch('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsMiddleware.validateUpdateFields, newsController.updateNews);
+route.delete('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.deleteNews);
 
 export default route;
