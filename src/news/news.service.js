@@ -48,16 +48,45 @@ export const update = async (id, userId, body) => {
 export const deleteNews = async (id, userId) => {
     const news = await News.findById(id);
 
-    if(!news)
+    if (!news)
         return OperationResult.error("No news found for the provided id.");
 
-    if(!news.user.equals(userId))
+    if (!news.user.equals(userId))
         return OperationResult.error("Users can only delete their own news.");
 
     const result = await News.deleteOne({ _id: id });
 
-    if(!result)
+    if (!result)
         return OperationResult.error("Failed to delete news.");
+
+    return OperationResult.success();
+}
+
+export const likeNews = async (id, userId) => {
+    const news = await News.findById(id);
+
+    if (!news)
+        return OperationResult.error("No news found for the provided id.");
+
+    const like = await News.findOneAndUpdate(
+        { _id: id, "likes.userId": { $nin: [userId] } },
+        { $push: { likes: { userId, created: new Date() } } },
+        { new: true }
+    );
+
+    if (!like) 
+        return await removeLike(id, userId);
+
+    return OperationResult.success();
+}
+
+const removeLike = async (id, userId) => {
+    const result = await News.findOneAndUpdate(
+        { _id: id },
+        { $pull: { likes: { userId } } }
+    );
+
+    if(!result) return OperationResult.error("Failed to remove the like.");
 
     return OperationResult.success();
 }
