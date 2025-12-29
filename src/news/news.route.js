@@ -16,5 +16,7 @@ route.patch('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, ne
 route.delete('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.deleteNews);
 
 route.patch('/like/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.likeNews);
+route.patch('/comment/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.addComment);
+route.patch('/removeComment/:id/:commentId', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.removeComment);
 
 export default route;

@@ -123,7 +123,7 @@ export async function deleteNews(req, res) {
 
         const result = await newsService.deleteNews(id, userId);
 
-        if(!result.success)
+        if (!result.success)
             return res.status(400).send(ApiResult.error(result.message));
 
         return res.status(200).send(ApiResult.success());
@@ -138,10 +138,49 @@ export async function likeNews(req, res) {
     try {
         const userId = req.userId;
         const id = req.params.id;
-        
+
         const result = await newsService.likeNews(id, userId);
 
-        if(!result.success)
+        if (!result.success)
+            return res.status(400).send(ApiResult.error(result.message));
+
+        return res.status(200).send(ApiResult.success(result.data));
+
+    } catch (error) {
+        console.log(error);
+        return defaultInternalError(res);
+    }
+}
+
+export async function addComment(req, res) {
+    try {
+        const { userId, body } = req;
+        const id = req.params.id;
+
+        if(!body.text)
+            return res.status(400).send(ApiResult.error("Submit text field to add a new comment."));
+
+        const result = await newsService.addComment(id, userId, body.text);
+
+        if (!result.success)
+            return res.status(400).send(ApiResult.error(result.message));
+
+        return res.status(200).send(ApiResult.success(result.data));
+
+    } catch (error) {
+        console.log(error);
+        return defaultInternalError(res);
+    }
+}
+
+export async function removeComment(req, res) {
+    try {
+        const userId = req.userId;
+        const { id, commentId } = req.params;
+
+        const result = await newsService.removeComment(id, commentId, userId);
+
+        if (!result.success)
             return res.status(400).send(ApiResult.error(result.message));
 
         return res.status(200).send(ApiResult.success(result.data));

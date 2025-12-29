@@ -1,6 +1,7 @@
 import { News } from './News.js';
 import { getSkipValue } from '../utils/db-skip-calculator.js';
 import { OperationResult } from '../utils/operation.result.js';
+import { generateId } from '../utils/id-generator.js';
 
 export const findAll = async (limit = 5, page = 1) => {
     const data = await News.find()
@@ -74,7 +75,7 @@ export const likeNews = async (id, userId) => {
         { new: true }
     );
 
-    if (!like) 
+    if (!like)
         return await removeLike(id, userId);
 
     return OperationResult.success();
@@ -86,7 +87,52 @@ const removeLike = async (id, userId) => {
         { $pull: { likes: { userId } } }
     );
 
-    if(!result) return OperationResult.error("Failed to remove the like.");
+    if (!result) return OperationResult.error("Failed to remove the like.");
+
+    return OperationResult.success();
+}
+
+export const addComment = async (id, userId, text) => {
+    const news = await News.findById(id);
+
+    if (!news)
+        return OperationResult.error("No news found for the provided id.");
+
+    const commentId = generateId();
+
+    const result = await News.findOneAndUpdate(
+        { _id: id },
+        {
+            $push: {
+                comments: {
+                    commentId,
+                    userId,
+                    text,
+                    createdAt: new Date()
+                }
+            }
+        }
+    );
+
+    if (!result) return OperationResult.error("Failed to comment.");
+
+    return OperationResult.success();
+}
+
+export const removeComment = async (newsId, commentId, userId) => {
+    const result = await News.updateOne(
+        {
+            _id: newsId,
+            "comments.commentId": commentId,
+            "comments.userId": userId
+        },
+        {
+            $pull: { comments: { commentId, userId } }
+        }
+    );
+
+    if (result.modifiedCount === 0)
+        return OperationResult.error("Comment not found or not owned by current user.");
 
     return OperationResult.success();
 }
