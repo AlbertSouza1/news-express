@@ -1,0 +1,1690 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Breaking News API Documentation",
+        "description": "In this documentation you will be able to consult the API end points and also test all available routes. Do not forget to register and carry out the authorization.",
+        "contact": { 
+            "email": "albert.dev.sf@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Local"
+        }
+    ],
+    "paths": {
+        "/auth": {
+            "post": {
+                "summary": "User login",
+                "description": "Authenticates a user and returns a JWT token",
+                "tags": ["Auth"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing email or password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "Submit email and password to log in.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "Email or password invalid.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "Internal server error.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "summary": "Get all users",
+                "description": "Returns a paginated list of all users",
+                "tags": ["User"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number (default: 1)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of items per page (default: 10, max: 50)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 50,
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of users retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No users found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "No users found.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new user",
+                "description": "Creates a new user in the system",
+                "tags": ["User"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error or user creation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingFields": {
+                                        "value": {
+                                            "message": "Submit all fields for registration.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "creationError": {
+                                        "value": {
+                                            "message": "Error creating user.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "summary": "Get user by ID",
+                "description": "Returns a single user by their ID",
+                "tags": ["User"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID (MongoDB ObjectId)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or user not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "invalidId": {
+                                        "value": {
+                                            "message": "Invalid id.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "userNotFound": {
+                                        "value": {
+                                            "message": "User not found.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update user",
+                "description": "Updates an existing user's information",
+                "tags": ["User"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID (MongoDB ObjectId)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error, invalid ID, user not found or update failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "noFields": {
+                                        "value": {
+                                            "message": "Submit at least one field for update.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "invalidId": {
+                                        "value": {
+                                            "message": "Invalid id.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "userNotFound": {
+                                        "value": {
+                                            "message": "User not found.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "updateError": {
+                                        "value": {
+                                            "message": "No user updated.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news": {
+            "get": {
+                "summary": "Get all news",
+                "description": "Returns a paginated list of all news",
+                "tags": ["News"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number (default: 1)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of items per page (default: 5, max: 50)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 50,
+                            "default": 5
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of news retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NewsListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new news",
+                "description": "Creates a new news article (requires authentication)",
+                "tags": ["News"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewsCreateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "News created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NewsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error or news creation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingFields": {
+                                        "value": {
+                                            "message": "Submit all fields to create a news.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "creationError": {
+                                        "value": {
+                                            "message": "Error creating news.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news/top": {
+            "get": {
+                "summary": "Get top news",
+                "description": "Returns the latest/top news article",
+                "tags": ["News"],
+                "responses": {
+                    "200": {
+                        "description": "Top news retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NewsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No news found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "No news found.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news/search": {
+            "get": {
+                "summary": "Search news by title",
+                "description": "Search for news articles by title (requires authentication)",
+                "tags": ["News"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Search text for news title",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "News found successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NewsListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "No news found for the search",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "No news found for the provided search text.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news/user/{id}": {
+            "get": {
+                "summary": "Get news by user ID",
+                "description": "Returns all news articles created by a specific user (requires authentication)",
+                "tags": ["News"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID (MongoDB ObjectId)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User news retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NewsListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or no news found for user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "invalidId": {
+                                        "value": {
+                                            "message": "Invalid id.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "noNews": {
+                                        "value": {
+                                            "message": "No news found for this user.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news/{id}": {
+            "get": {
+                "summary": "Get news by ID",
+                "description": "Returns a single news article by its ID (requires authentication)",
+                "tags": ["News"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "News ID (MongoDB ObjectId)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "News retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NewsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or news not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "invalidId": {
+                                        "value": {
+                                            "message": "Invalid id.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "notFound": {
+                                        "value": {
+                                            "message": "No news found for the provided id.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update news",
+                "description": "Updates an existing news article (requires authentication and ownership)",
+                "tags": ["News"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "News ID (MongoDB ObjectId)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewsUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "News updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error, invalid ID or update failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "noFields": {
+                                        "value": {
+                                            "message": "Submit at least one field to update.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "invalidId": {
+                                        "value": {
+                                            "message": "Invalid id.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete news",
+                "description": "Deletes a news article (requires authentication and ownership)",
+                "tags": ["News"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "News ID (MongoDB ObjectId)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "News deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or deletion failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "Invalid id.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news/like/{id}": {
+            "patch": {
+                "summary": "Like/Unlike news",
+                "description": "Toggles like on a news article (requires authentication)",
+                "tags": ["News"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "News ID (MongoDB ObjectId)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Like toggled successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or operation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "Invalid id.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news/comment/{id}": {
+            "patch": {
+                "summary": "Add comment to news",
+                "description": "Adds a comment to a news article (requires authentication)",
+                "tags": ["News"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "News ID (MongoDB ObjectId)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CommentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Comment added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID, missing text field or operation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "invalidId": {
+                                        "value": {
+                                            "message": "Invalid id.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    },
+                                    "missingText": {
+                                        "value": {
+                                            "message": "Submit text field to add a new comment.",
+                                            "data": null,
+                                            "pagination": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news/removeComment/{id}/{commentId}": {
+            "patch": {
+                "summary": "Remove comment from news",
+                "description": "Removes a comment from a news article (requires authentication)",
+                "tags": ["News"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "News ID (MongoDB ObjectId)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    },
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "description": "Comment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comment removed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID or operation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "Invalid id.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "User unique identifier",
+                        "example": "507f1f77bcf86cd799439011"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "User's full name",
+                        "example": "John Doe"
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "User's username",
+                        "example": "johndoe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "User's email address",
+                        "example": "john.doe@example.com"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to user's avatar image",
+                        "example": "https://example.com/avatar.jpg"
+                    },
+                    "background": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to user's background image",
+                        "example": "https://example.com/background.jpg"
+                    }
+                }
+            },
+            "News": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "News unique identifier",
+                        "example": "507f1f77bcf86cd799439011"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "News title",
+                        "example": "Breaking News: Important Update"
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "News content/body",
+                        "example": "This is the full content of the news article..."
+                    },
+                    "banner": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to news banner image",
+                        "example": "https://example.com/banner.jpg"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "News creation date",
+                        "example": "2024-01-15T10:30:00.000Z"
+                    },
+                    "userName": {
+                        "type": "string",
+                        "description": "Name of the user who created the news",
+                        "example": "John Doe"
+                    },
+                    "userAvatar": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "Avatar of the user who created the news",
+                        "example": "https://example.com/avatar.jpg"
+                    },
+                    "likes": {
+                        "type": "array",
+                        "description": "Array of user IDs who liked the news",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": ["507f1f77bcf86cd799439011", "507f1f77bcf86cd799439012"]
+                    },
+                    "comments": {
+                        "type": "array",
+                        "description": "Array of comments on the news",
+                        "items": {
+                            "type": "object"
+                        },
+                        "example": [
+                            {
+                                "id": "comment1",
+                                "text": "Great article!",
+                                "userId": "507f1f77bcf86cd799439011",
+                                "createdAt": "2024-01-15T10:35:00.000Z"
+                            }
+                        ]
+                    }
+                }
+            },
+            "NewsCreateRequest": {
+                "type": "object",
+                "required": ["title", "text", "banner"],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "News title",
+                        "example": "Breaking News: Important Update"
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "News content/body",
+                        "example": "This is the full content of the news article..."
+                    },
+                    "banner": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to news banner image",
+                        "example": "https://example.com/banner.jpg"
+                    }
+                }
+            },
+            "NewsUpdateRequest": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "News title",
+                        "example": "Updated Breaking News"
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "News content/body",
+                        "example": "This is the updated content..."
+                    },
+                    "banner": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to news banner image",
+                        "example": "https://example.com/new-banner.jpg"
+                    }
+                },
+                "description": "At least one field is required for update"
+            },
+            "CommentRequest": {
+                "type": "object",
+                "required": ["text"],
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "description": "Comment text",
+                        "example": "This is a great article!"
+                    }
+                }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "User's email address",
+                        "example": "john.doe@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "description": "User's password",
+                        "example": "SecurePassword123!"
+                    }
+                }
+            },
+            "LoginResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResult"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "OK"
+                            },
+                            "data": {
+                                "type": "object",
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "description": "JWT authentication token",
+                                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MDdmMWY3N2JjZjg2Y2Q3OTk0MzkwMTEiLCJpYXQiOjE3MDUzMjAwMDAsImV4cCI6MTcwNTQwNjQwMH0.example"
+                                    }
+                                },
+                                "description": "Login data containing JWT token"
+                            },
+                            "pagination": {
+                                "type": "null"
+                            }
+                        }
+                    }
+                ]
+            },
+            "UserCreateRequest": {
+                "type": "object",
+                "required": ["name", "username", "email", "password", "avatar", "background"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "User's full name",
+                        "example": "John Doe"
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "User's username",
+                        "example": "johndoe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "User's email address (must be unique)",
+                        "example": "john.doe@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "description": "User's password (will be encrypted)",
+                        "example": "SecurePassword123!"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to user's avatar image",
+                        "example": "https://example.com/avatar.jpg"
+                    },
+                    "background": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to user's background image",
+                        "example": "https://example.com/background.jpg"
+                    }
+                }
+            },
+            "UserUpdateRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "User's full name",
+                        "example": "John Doe"
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "User's username",
+                        "example": "johndoe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "User's email address",
+                        "example": "john.doe@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "description": "User's new password",
+                        "example": "NewSecurePassword123!"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to user's avatar image",
+                        "example": "https://example.com/avatar.jpg"
+                    },
+                    "background": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to user's background image",
+                        "example": "https://example.com/background.jpg"
+                    }
+                },
+                "description": "At least one field is required for update"
+            },
+            "Pagination": {
+                "type": "object",
+                "properties": {
+                    "currentPage": {
+                        "type": "integer",
+                        "description": "Current page number",
+                        "example": 1
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "description": "Total number of pages (if calculable)",
+                        "example": 5
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "example": 10
+                    },
+                    "next": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to next page (if available)",
+                        "example": "http://localhost:3000/users?page=2&limit=10"
+                    },
+                    "prev": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL to previous page (if available)",
+                        "example": "http://localhost:3000/users?page=1&limit=10"
+                    }
+                }
+            },
+            "ApiResult": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Response message",
+                        "example": "OK"
+                    },
+                    "data": {
+                        "description": "Response data",
+                        "nullable": true
+                    },
+                    "pagination": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Pagination"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                }
+            },
+            "SuccessResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResult"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "OK"
+                            },
+                            "data": {
+                                "nullable": true
+                            },
+                            "pagination": {
+                                "type": "null"
+                            }
+                        }
+                    }
+                ]
+            },
+            "UserResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResult"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "OK"
+                            },
+                            "data": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "pagination": {
+                                "type": "null"
+                            }
+                        }
+                    }
+                ]
+            },
+            "UserListResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResult"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "OK"
+                            },
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            },
+                            "pagination": {
+                                "$ref": "#/components/schemas/Pagination"
+                            }
+                        }
+                    }
+                ]
+            },
+            "NewsResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResult"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "OK"
+                            },
+                            "data": {
+                                "$ref": "#/components/schemas/News"
+                            },
+                            "pagination": {
+                                "type": "null"
+                            }
+                        }
+                    }
+                ]
+            },
+            "NewsListResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResult"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "OK"
+                            },
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/News"
+                                }
+                            },
+                            "pagination": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Pagination"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            },
+            "ErrorResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResult"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "Internal error."
+                            },
+                            "data": {
+                                "type": "null"
+                            },
+                            "pagination": {
+                                "type": "null"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
