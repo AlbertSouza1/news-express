@@ -17,6 +17,6 @@ app.use(express.json());
 app.use("/users", userRoute);
 app.use("/auth", authRoute);
 app.use("/news", newsRoute);
-app.use("/swagger", swaggerRoute);
+app.use("/doc", swaggerRoute);
 
 app.listen(port);

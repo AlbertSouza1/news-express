@@ -3,12 +3,16 @@
     "info": {
         "title": "Breaking News API Documentation",
         "description": "In this documentation you will be able to consult the API end points and also test all available routes. Do not forget to register and carry out the authorization.",
-        "contact": { 
+        "contact": {
             "email": "albert.dev.sf@gmail.com"
         },
         "version": "1.0.0"
     },
     "servers": [
+        {
+            "url": "https://api-news-express.onrender.com",
+            "description": "Render Server"
+        },
         {
             "url": "http://localhost:3000",
             "description": "Local"
@@ -19,7 +23,9 @@
             "post": {
                 "summary": "User login",
                 "description": "Authenticates a user and returns a JWT token",
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -93,7 +99,9 @@
             "get": {
                 "summary": "Get all users",
                 "description": "Returns a paginated list of all users",
-                "tags": ["User"],
+                "tags": [
+                    "User"
+                ],
                 "parameters": [
                     {
                         "name": "page",
@@ -160,7 +168,9 @@
             "post": {
                 "summary": "Create a new user",
                 "description": "Creates a new user in the system",
-                "tags": ["User"],
+                "tags": [
+                    "User"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -225,7 +235,9 @@
             "get": {
                 "summary": "Get user by ID",
                 "description": "Returns a single user by their ID",
-                "tags": ["User"],
+                "tags": [
+                    "User"
+                ],
                 "parameters": [
                     {
                         "name": "id",
@@ -290,7 +302,9 @@
             "patch": {
                 "summary": "Update user",
                 "description": "Updates an existing user's information",
-                "tags": ["User"],
+                "tags": [
+                    "User"
+                ],
                 "parameters": [
                     {
                         "name": "id",
@@ -381,7 +395,9 @@
             "get": {
                 "summary": "Get all news",
                 "description": "Returns a paginated list of all news",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "parameters": [
                     {
                         "name": "page",
@@ -433,7 +449,9 @@
             "post": {
                 "summary": "Create a new news",
                 "description": "Creates a new news article (requires authentication)",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "security": [
                     {
                         "bearerAuth": []
@@ -513,7 +531,9 @@
             "get": {
                 "summary": "Get top news",
                 "description": "Returns the latest/top news article",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "responses": {
                     "200": {
                         "description": "Top news retrieved successfully",
@@ -557,7 +577,9 @@
             "get": {
                 "summary": "Search news by title",
                 "description": "Search for news articles by title (requires authentication)",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "security": [
                     {
                         "bearerAuth": []
@@ -627,7 +649,9 @@
             "get": {
                 "summary": "Get news by user ID",
                 "description": "Returns all news articles created by a specific user (requires authentication)",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "security": [
                     {
                         "bearerAuth": []
@@ -709,7 +733,9 @@
             "get": {
                 "summary": "Get news by ID",
                 "description": "Returns a single news article by its ID (requires authentication)",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "security": [
                     {
                         "bearerAuth": []
@@ -789,7 +815,9 @@
             "patch": {
                 "summary": "Update news",
                 "description": "Updates an existing news article (requires authentication and ownership)",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "security": [
                     {
                         "bearerAuth": []
@@ -879,7 +907,9 @@
             "delete": {
                 "summary": "Delete news",
                 "description": "Deletes a news article (requires authentication and ownership)",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "security": [
                     {
                         "bearerAuth": []
@@ -950,7 +980,9 @@
             "patch": {
                 "summary": "Like/Unlike news",
                 "description": "Toggles like on a news article (requires authentication)",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "security": [
                     {
                         "bearerAuth": []
@@ -1021,7 +1053,9 @@
             "patch": {
                 "summary": "Add comment to news",
                 "description": "Adds a comment to a news article (requires authentication)",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "security": [
                     {
                         "bearerAuth": []
@@ -1113,7 +1147,9 @@
             "patch": {
                 "summary": "Remove comment from news",
                 "description": "Removes a comment from a news article (requires authentication)",
-                "tags": ["News"],
+                "tags": [
+                    "News"
+                ],
                 "security": [
                     {
                         "bearerAuth": []
@@ -1284,7 +1320,10 @@
                         "items": {
                             "type": "string"
                         },
-                        "example": ["507f1f77bcf86cd799439011", "507f1f77bcf86cd799439012"]
+                        "example": [
+                            "507f1f77bcf86cd799439011",
+                            "507f1f77bcf86cd799439012"
+                        ]
                     },
                     "comments": {
                         "type": "array",
@@ -1305,7 +1344,11 @@
             },
             "NewsCreateRequest": {
                 "type": "object",
-                "required": ["title", "text", "banner"],
+                "required": [
+                    "title",
+                    "text",
+                    "banner"
+                ],
                 "properties": {
                     "title": {
                         "type": "string",
@@ -1349,7 +1392,9 @@
             },
             "CommentRequest": {
                 "type": "object",
-                "required": ["text"],
+                "required": [
+                    "text"
+                ],
                 "properties": {
                     "text": {
                         "type": "string",
@@ -1360,7 +1405,10 @@
             },
             "LoginRequest": {
                 "type": "object",
-                "required": ["email", "password"],
+                "required": [
+                    "email",
+                    "password"
+                ],
                 "properties": {
                     "email": {
                         "type": "string",
@@ -1408,7 +1456,14 @@
             },
             "UserCreateRequest": {
                 "type": "object",
-                "required": ["name", "username", "email", "password", "avatar", "background"],
+                "required": [
+                    "name",
+                    "username",
+                    "email",
+                    "password",
+                    "avatar",
+                    "background"
+                ],
                 "properties": {
                     "name": {
                         "type": "string",
