@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { login } from './auth.controller.js';
 import { validateLoginFields } from './auth.middleware.js';
 
-const route = Router();
+const authRoute = Router();
 
-route.post('/', validateLoginFields, login);
+authRoute.post('/', validateLoginFields, login);
 
-export default route;
+export default authRoute;

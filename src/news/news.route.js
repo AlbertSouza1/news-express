@@ -4,19 +4,19 @@ import * as newsController from "./news.controller.js";
 import * as newsMiddleware from "./news.middleware.js";
 import { validatePagination } from "../utils/pagination/pagination.middleware.js";
 
-const route = Router();
+const newsRoute = Router();
 
-route.post('/', verifyAuthentication, newsMiddleware.validateCreationFields, newsController.create);
-route.get('/', validatePagination({ defaultLimit: 5, maxLimit: 50 }), newsController.findAll);
-route.get('/top', newsController.topNews);
-route.get('/search', verifyAuthentication, newsController.findByTitle);
-route.get('/user/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.findUserNews);
-route.get('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.findById);
-route.patch('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsMiddleware.validateUpdateFields, newsController.updateNews);
-route.delete('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.deleteNews);
+newsRoute.post('/', verifyAuthentication, newsMiddleware.validateCreationFields, newsController.create);
+newsRoute.get('/', validatePagination({ defaultLimit: 5, maxLimit: 50 }), newsController.findAll);
+newsRoute.get('/top', newsController.topNews);
+newsRoute.get('/search', verifyAuthentication, newsController.findByTitle);
+newsRoute.get('/user/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.findUserNews);
+newsRoute.get('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.findById);
+newsRoute.patch('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsMiddleware.validateUpdateFields, newsController.updateNews);
+newsRoute.delete('/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.deleteNews);
 
-route.patch('/like/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.likeNews);
-route.patch('/comment/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.addComment);
-route.patch('/removeComment/:id/:commentId', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.removeComment);
+newsRoute.patch('/like/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.likeNews);
+newsRoute.patch('/comment/:id', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.addComment);
+newsRoute.patch('/removeComment/:id/:commentId', verifyAuthentication, newsMiddleware.validateIdParameter, newsController.removeComment);
 
-export default route;
+export default newsRoute;
