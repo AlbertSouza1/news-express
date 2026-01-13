@@ -8,10 +8,8 @@ export async function findAll(req, res) {
         const { limit, page } = req.pagination;
         const { users, hasNext } = await userService.findAll(limit, page);
 
-        if (users.length === 0)
-            return res.status(404).send(ApiResult.error("No users found."));
-
         const paginationInfo = buildPaginationInfo(req, hasNext);
+        
         return res.status(200).send(ApiResult.success(users.map(user => UserResult.fromUserModel(user)), paginationInfo));
 
     } catch (error) {
