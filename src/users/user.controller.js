@@ -32,11 +32,13 @@ export async function createUser(req, res) {
     const body = req.body;
 
     try {
-        const user = await userService.create(body);
+        const { createdUser, token } = await userService.create(body);
+                
+        if (!createdUser) return res.status(400).send(ApiResult.error("Error creating user."));
 
-        if (!user) return res.status(400).send(ApiResult.error("Error creating user."));
+        const user = UserResult.fromUserModel(createdUser)
+        res.status(201).send(ApiResult.success({token, user}));
 
-        res.status(201).send(ApiResult.success(UserResult.fromUserModel(user)));
     } catch (error) {
         res.status(500).send(ApiResult.error("Internal error."));
     }

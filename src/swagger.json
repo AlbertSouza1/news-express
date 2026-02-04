@@ -187,7 +187,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserResponse"
+                                    "$ref": "#/components/schemas/RegisteredUserResponse"
                                 }
                             }
                         }
@@ -1235,6 +1235,41 @@
             }
         },
         "schemas": {
+            "RegisteredUserResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResult"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "OK"
+                            },
+                            "data": {
+                                "$ref": "#/components/schemas/RegisteredUser"
+                            },
+                            "pagination": {
+                                "type": "null"
+                            }
+                        }
+                    }
+                ]
+            },
+            "RegisteredUser": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "JWT authentication token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTgzZDJmMzEyYTRkZGQ5ZTVlMjY1NjEiLCJpYXQiOjE3NzAyNDY4OTksImV4cCI6MTc3MDg1MTY5OX0.BUJ6qIbTwRzQxZUSTLV-9JLAwLfveKgi7K_Q50ytvOI"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                }
+            },
             "User": {
                 "type": "object",
                 "properties": {
