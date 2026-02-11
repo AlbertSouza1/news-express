@@ -59,3 +59,18 @@ export async function updateUser(req, res) {
         res.status(500).send(ApiResult.error("Internal error."));
     }
 }
+
+export async function getLoggedUser(req, res) {
+    try {
+        const user = await userService.findById(req.userId);
+        
+        if (!user) {
+            return res.status(404).send(ApiResult.error("User not found."));
+        }
+        
+        return res.status(200).send(ApiResult.success(UserResult.fromUserModel(user)));
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(ApiResult.error("Internal error."));
+    }
+}

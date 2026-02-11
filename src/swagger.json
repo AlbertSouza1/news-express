@@ -231,12 +231,83 @@
                 }
             }
         },
+        "/users/logged": {
+            "get": {
+                "summary": "Get logged user",
+                "description": "Returns the authenticated user's information based on the JWT token",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "User not found.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "message": "Internal error.",
+                                    "data": null,
+                                    "pagination": null
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "get": {
                 "summary": "Get user by ID",
-                "description": "Returns a single user by their ID",
+                "description": "Returns a single user by their ID (requires authentication)",
                 "tags": [
                     "User"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "parameters": [
                     {
@@ -283,6 +354,16 @@
                                             "pagination": null
                                         }
                                     }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
